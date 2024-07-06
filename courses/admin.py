@@ -14,6 +14,8 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    pass
+    list_display=("name","slug")
+    #readonly_fields=("slug",)
+    prepopulated_fields={"slug":("name",),}
 
 
