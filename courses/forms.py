@@ -5,7 +5,7 @@ from courses.models import Course
 class CourseCreateForm(forms.ModelForm):
     class Meta:
         model=Course 
-        fields=('title','description','imageUrl','slug')
+        fields=('title','description','image','slug',"categories","isActive")
         #fields='__all__'
         labels={
             'title':"Kurs Başlığı",
@@ -14,8 +14,9 @@ class CourseCreateForm(forms.ModelForm):
         widgets={
             "title":forms.TextInput(attrs={"class":"form-control"}),
             "description":forms.Textarea(attrs={"class":"form-control"}),
-            "imageUrl":forms.TextInput(attrs={"class":"form-control"}),
-            "slug":forms.TextInput(attrs={"class":"form-control"})
+            "slug":forms.TextInput(attrs={"class":"form-control"}),
+            "categories": forms.SelectMultiple(attrs={"class":"form-control"})           
+            
         }
         error_messages={
             "title": {
@@ -31,7 +32,7 @@ class CourseCreateForm(forms.ModelForm):
 class CourseEditForm(forms.ModelForm):
     class Meta:
         model=Course 
-        fields=('title','description','imageUrl','slug')
+        fields=('title','description','image','slug',"categories","isActive")
         #fields='__all__'
         labels={
             'title':"Kurs Başlığı",
@@ -40,8 +41,8 @@ class CourseEditForm(forms.ModelForm):
         widgets={
             "title":forms.TextInput(attrs={"class":"form-control"}),
             "description":forms.Textarea(attrs={"class":"form-control"}),
-            "imageUrl":forms.TextInput(attrs={"class":"form-control"}),
-            "slug":forms.TextInput(attrs={"class":"form-control"})
+            "slug":forms.TextInput(attrs={"class":"form-control"}),
+            "categories": forms.SelectMultiple(attrs={"class":"form-control"})
         }
         error_messages={
             "title": {
@@ -53,3 +54,7 @@ class CourseEditForm(forms.ModelForm):
             }
         
         }
+        
+        
+class UploadForm(forms.Form):
+    image=forms.ImageField()
