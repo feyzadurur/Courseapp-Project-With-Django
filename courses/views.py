@@ -2,8 +2,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import Paginator
 from courses.forms import CourseCreateForm, CourseEditForm, UploadForm
 from .models import Course,Category, UploadModel
-import random
-import os
+from django.contrib.auth.decorators import login_required,user_passes_test
+
 
 def index(request):
     kurslar=Course.objects.filter(isActive=1,isHome=1)
@@ -13,9 +13,13 @@ def index(request):
         'categories': kategoriler,
         'courses': kurslar
     })
+    
+def isAdmin(user):
+    return user.is_superuser
 
-
+@user_passes_test(isAdmin)
 def create_course(request):
+    
     if request.method == "POST":
         form=CourseCreateForm(request.POST,request.FILES)
         
@@ -25,6 +29,14 @@ def create_course(request):
     else: 
         form=CourseCreateForm()
     return render(request, "courses/create-course.html",{"form":form})
+
+@login_required()
+def course_list(request):
+    kurslar=Course.objects.all()
+    
+    return render(request,'courses/course-list.html',{
+        'courses': kurslar
+    })
 
 
 def search(request):
@@ -42,14 +54,6 @@ def search(request):
     })
 
     
-def course_list(request):
-    kurslar=Course.objects.all()
-    
-    return render(request,'courses/course-list.html',{
-        'courses': kurslar
-    })
-
-
 def course_edit(request,id):
     course=get_object_or_404(Course,pk=id)
     
